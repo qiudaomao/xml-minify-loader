@@ -2,18 +2,20 @@
   MIT License http://www.opensource.org/licenses/mit-license.php
   Author KingMario
 */
-var csstree = require('css-tree')
+var cheerio = require('cheerio')
+var CleanCSS = require('clean-css')
 module.exports = function(source) {
   this.value = source;
 
   var pd = require('pretty-data').pd;
   var str = pd.xmlmin(source);
-  let m = str.replace(/\n/g, '').match(/<style>(.*)<\/style>/)
-  if (m) {
-    var style = m[1]
-    var ast = csstree.parse(style)
-    var styleNew = csstree.generate(ast)
-    str = str.replace(/\n/g, '').replace(/<style>.*<\/style>/, styleNew)
+  var $ = cheerio.load(str, {xmlMode: true})
+  let style = $("document head style").html()
+  if (style) {
+    // console.log(style)
+    let styleNew = new CleanCSS().minify(style).styles
+    // console.log(styleNew)
+    str = str.replace(/\n/g, '').replace(/<style>.*<\/style>/, `<style>${styleNew}</style>`)
   }
 
   return "module.exports = " + JSON.stringify(str)
