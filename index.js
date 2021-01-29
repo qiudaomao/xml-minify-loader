@@ -13,7 +13,9 @@ module.exports = function(source) {
   let style = $("document head style").html()
   if (style) {
     // console.log(style)
-    let styleNew = new CleanCSS().minify(style).styles
+    let styleNew = new CleanCSS({
+        format: "keep-breaks"
+    }).minify(style).styles
     // console.log(styleNew)
     str = str.replace(/\n/g, '').replace(/<style>.*<\/style>/, `<style>${styleNew}</style>`)
   }
