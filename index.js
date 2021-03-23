@@ -11,7 +11,7 @@ module.exports = function(source) {
   var str = pd.xmlmin(source);
   var $ = cheerio.load(str, {xmlMode: true})
   let style = $("document head style").html()
-  if (style) {
+  if (false && style) {
     // console.log(style)
         //format: "keep-breaks"
     let styleNew = new CleanCSS({
